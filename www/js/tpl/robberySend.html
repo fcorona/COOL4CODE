@@ -5,14 +5,16 @@
 
 <div class="content">
     <div id="formContainer">
-        <form>
-          <select>
+        <form id="reporteForm">
+          <select name="category">
+              <option value="">Seleccione</option>
               <% _.each(categories, function(c) { %>
                 <option value="<%= c.objectId %>"><%= c.description %></option>
               <% }); %>
           </select>
-          <input type="text" placeholder="Av. cr 7 #a">
-          <textarea rows="5" placeholder="comentario..."></textarea>
+          <input type="text" placeholder="Av. cr 7 # 69" name="geoPoint" />          
+          <input type="datetime" value="2014-03-29T15:20:57-05:00" name="date" />
+          <textarea rows="5" placeholder="Comentario..." name="comment"></textarea>
           <button class="btn btn-positive btn-block btn-ok">Enviar reporte</button>
         </form> 
     </div> 
