@@ -16,12 +16,17 @@ define(function(require) {
 
 		deferred: $.Deferred(),
 
+		dimensiones: [],
+
 		categorias: [],
+
+		datos: [],
 
 		checkUpdatedData: function() {
 			console.log("checkUpdatedData: Comprobando si los datos están actualizados!");
 			bcv.deferred.notify({
-				msg: "Comprobando datos actualizados!"
+				msg: "Comprobando datos actualizados!",
+				count: 0
 			});
 			var updated = window.localStorage.getItem("updated");
 
@@ -34,32 +39,102 @@ define(function(require) {
 			}
 		},
 
-		loadCategorias: function() {
-			console.log("loadCategorias: Consultando datos como vamos!");
+		loadDimensiones: function() {
+			console.log("loadDimensiones: Consultando datos BOGOTA COMO VAMOS!");
 			bcv.deferred.notify({
-				msg: "Descargando datos: BCV!"
+				msg: "Descargando datos: Dimensiones!",
+				count: 0
 			});
 			var url = "http://api.bogotacomovamos.org/api/dimensions/3?key=comovamos";
 			var xhr = bcv.getJson(url);
 			xhr.success(function(r) {
-				console.log("loadCategorias: Descarga completa!");
-				$.each(r.d, function(k, v) {
-					bcv.categorias.push(v);
-				});
-
-				console.log("loadCategorias: Se descargaron los datos completos de open data!");
+				console.log("loadDimensiones: Descarga completa!");
+				bcv.dimensiones.push(r);
+				bcv.loadCategorias();
 			});
-			console.log("loadCategorias: " + url);
+			console.log("loadDimensiones: " + url);
+		},
+
+		loadCategorias: function() {
+			console.log("loadCategorias: Consultando datos BOGOTA COMO VAMOS!");
+			bcv.deferred.notify({
+				msg: "Descargando datos: Categorias!",
+				count: 0
+			});
+
+			var items = [];
+			$.each(this.dimensiones, function(k1, v1) {
+				$.each(v1, function(k2, v2) {
+					if (k2 === "categories") {
+						$.each(v2, function(k3, v3) {
+							$.each(v3, function(k4, v4) {
+								if (k4 === "href") {
+									items.push(d(v4));
+								}
+							});
+						});
+					}
+				});
+			});
+			$.when.apply($, items).done(bcv.loadDatos);
+
+			function d(ref) {
+				console.log("loadCategorias: " + ref);
+				var def = $.Deferred();
+				var xhr = bcv.getJson(ref);
+				xhr.success(function(r) {
+					console.log("loadCategorias: Descarga completa!");
+					bcv.categorias.push(r);
+					def.resolve();
+				});
+				return def.promise();
+			}
+		},
+
+		loadDatos: function() {
+			console.log("loadDatos: Consultando datos BOGOTA COMO VAMOS!");
+			bcv.deferred.notify({
+				msg: "Descargando datos: Datos!",
+				count: 0
+			});
+
+			var items = [];
+			$.each(bcv.categorias, function(k1, v1) {
+				$.each(v1, function(k2, v2) {
+					if (k2 === "datas") {
+						$.each(v2, function(k3, v3) {
+							$.each(v3, function(k4, v4) {
+								if (k4 === "href") {
+									items.push(d(v4));
+								}
+							});
+						});
+					}
+				});
+			});
+			$.when.apply($, items).done(bcv.createDB);
+
+			function d(ref) {
+				console.log("loadDatos: " + ref);
+				var def = $.Deferred();
+				var xhr = bcv.getJson(ref);
+				xhr.success(function(r) {
+					console.log("loadDatos: Descarga completa!");
+					bcv.datos.push(r);
+					def.resolve();
+				});
+				return def.promise();
+			}
 		},
 
 		getJson: function(url) {
 			return $.ajax({
 				type: "GET",
 				url: url,
-				dataType: 'jsonp',
+				dataType: 'json',
 				error: function() {
-					console.error("El repositorio de datos bogota como vamos no está disponible ó se ha perdido la conexión con la red!");
-					navigator.notification.alert('El repositorio de datos bogota como vamos no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {}, 'Atención', 'Reintentar');
+					console.error("El repositorio de datos bogota BOGOTA COMO VAMOS no está disponible ó se ha perdido la conexión con la red!");
+					navigator.notification.alert('El repositorio de datos bogota BOGOTA COMO VAMOS no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {}, 'Atención', 'Reintentar');
 				}
 			});
 		},
@@ -67,22 +142,32 @@ define(function(require) {
 		createDB: function() {
 			console.log("createDB: Creando base de datos!");
 			bcv.deferred.notify({
-				msg: "Creando base de datos!"
+				msg: "Creando base de datos!",
+				count: 0
 			});
-			var db = window.openDatabase("comovamos", "1.0", "BCV - Bogota Como Vamos", 4145728);
+			var db = window.openDatabase("comovamos", "1.0", "BCV - Bogota BOGOTA COMO VAMOS", 4145728);
 			db.transaction(bcv.populateDB, bcv.errorDB, bcv.successDB);
 		},
 
 		populateDB: function(tx) {
 			console.log("populateDB: Creando tablas!");
 			bcv.deferred.notify({
-				msg: "Insertando datos!"
+				msg: "Insertando datos!",
+				count: 0
 			});
 
 			var tables = [{
+				name: "dimensiones",
+				fields: [],
+				data: "dimensiones"
+			}, {
 				name: "categorias",
 				fields: [],
 				data: "categorias"
+			}, {
+				name: "datos",
+				fields: [],
+				data: "datos"
 			}];
 
 			$.each(tables, function(k, v) {
@@ -101,10 +186,21 @@ define(function(require) {
 				$.each(bcv[v.data], function(k1, v1) {
 					var values = [];
 					$.each(v1, function(k2, v2) {
-						values.push("'" + v2 + "'");
+						var v;
+						if (typeof v2 === "object") {
+							v = JSON.stringify(v2);
+						} else {
+							v = v2;
+						}
+						console.log(v);
+						values.push("'" + v + "'");
 					});
-					var sql = 'INSERT INTO ' + v.name + ' (' + v.fields.join() + ') VALUES (' + values.join() + ')';
-					tx.executeSql(sql);
+					if (values.length === v.fields.length) {
+						var sql = 'INSERT INTO ' + v.name + ' (' + v.fields.join() + ') VALUES (' + values.join() + ')';
+						tx.executeSql(sql);
+					} else {
+						console.error("El registro " + values.join() + "no coincide el numero de columnas!");
+					}
 				});
 
 			});
@@ -113,7 +209,8 @@ define(function(require) {
 		successDB: function() {
 			console.log("successDB: Guardando fecha de actualización!");
 			bcv.deferred.notify({
-				msg: "Base de datos creada con éxito!"
+				msg: "Base de datos creada con éxito!",
+				count: 0
 			});
 
 			var updated = new Date();
@@ -132,10 +229,20 @@ define(function(require) {
 			console.log('init: Go bcv!');
 			bcv.deferred.resolve({
 				msg: "Datos actualizados!",
-				count: 100
+				count: 0
 			});
 		}
 
+	};
+
+	return function() {
+		if (bcv.checkUpdatedData()) {
+			bcv.init();
+		} else {
+			bcv.loadDimensiones();
+		}
+
+		return bcv.deferred.promise();
 	};
 
 });
