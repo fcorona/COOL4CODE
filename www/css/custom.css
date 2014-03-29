@@ -1,0 +1,58 @@
+
+#mapContainer {
+    height: 100%;
+}
+
+#generalPicker {
+    background-color: #fff;
+    position: fixed !important;
+    width: 60px !important;
+    z-index: 1;
+    top: 186px !important;
+    height: 65px !important;
+    border-radius: 40px  0px 0px 40px ;
+    right: 0px !important;
+    opacity: 0.8;
+}
+
+#peoplePicker {
+    background-color: #fff;
+    position: fixed !important;
+    width: 60px !important;
+    z-index: 1;
+    top: 260px !important;
+    height: 65px !important;
+    border-radius: 40px  0px 0px 40px ;
+    right: 0px !important;
+    opacity: 0.8;
+}
+
+#robberyPicker {
+    background-color: #fff;
+    position: fixed !important;
+    width: 60px !important;
+    z-index: 1;
+    top: 336px !important;
+    height: 65px !important;
+    border-radius: 40px  0px 0px 40px ;
+    right: 0px !important;
+    opacity: 0.8;
+}
+
+#iconGeneral > img {
+    width: 45px;
+    margin-left: 11px;
+    margin-top: 8px;
+}
+
+#iconPeople > img {
+    width: 45px;
+    margin-left: 11px;
+    margin-top: 13px;
+}
+
+#iconRobbery > img {
+    width: 45px;
+    margin-left: 11px;
+    margin-top: 8px;
+}
