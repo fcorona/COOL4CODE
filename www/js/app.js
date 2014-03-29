@@ -39,9 +39,10 @@ require.config({
     }
 });
 
-require(['app/router', 'fastclick', 'pageslider', '../../phonegap'], function(router) {
+require(['app/router', 'parse', 'fastclick', 'pageslider', '../../phonegap'], function(router) {
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     document.addEventListener('deviceready', function() {
+        Parse.initialize("XwxLqEmk9PGHfLooBRcyQGJGGgwCmDaDvVntlAHO", "yeNOcPPyaarCCRsRyfQ1p98ZP9I6UaUeAxbVmv1a");
         FastClick.attach(document.body);
         App.router = new router();
         Backbone.history.start();

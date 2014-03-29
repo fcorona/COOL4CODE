@@ -1,24 +1,19 @@
 <header class="bar bar-nav">
-  <a class="icon icon-left-nav pull-left"></a>
+  <a class="icon icon-left-nav pull-left btn-back"></a>
   <h1 class="title">Reportar</h1>
 </header>
 
 <div class="content">
-    <div class="bar bar-standard bar-header-secondary">
-      <button class="btn btn-block">Detalles del reporte</button>
-    </div>
     <div id="formContainer">
         <form>
           <select>
-              <option value="0">Tipo de hurto</option>
-              <option value="1">Hurto a mano armada</option>
-              <option value="2">Hurto con arma blanca</option>
-              <option value="3">Raponeo</option>
-              <option value="4">Paseo millonario</option>
+              <% _.each(categories, function(c) { %>
+                <option value="<%= c.objectId %>"><%= c.description %></option>
+              <% }); %>
           </select>
           <input type="text" placeholder="Av. cr 7 #a">
           <textarea rows="5" placeholder="comentario..."></textarea>
-          <button class="btn btn-positive btn-block">Enviar reporte</button>
+          <button class="btn btn-positive btn-block btn-ok">Enviar reporte</button>
         </form> 
     </div> 
 </div>

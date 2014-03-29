@@ -15,9 +15,12 @@ define(function(require) {
 
     var HomeView = require('app/views/home'),
         IndicadorView = require('app/views/indicador'),
-        IndicadoresView = require('app/views/indicadores');
+        IndicadoresView = require('app/views/indicadores'),
+        ReporteView = require('app/views/reporte');
 
-    var Datos = require('app/models/datos');
+    var Datos = require('app/models/datos'),
+        Reporte = require('app/models/reporte'),
+        Categoria = require('app/models/categorias');
 
 
     return Backbone.Router.extend({
@@ -26,7 +29,8 @@ define(function(require) {
             "": "intro",
             "home": "home",
             "indicadores": "indicadores",
-            "indicador/:id":  "indicador"
+            "indicador/:id":  "indicador",
+            "reporte" : "reporte"
         },
 
         initialize: function() {
@@ -126,6 +130,22 @@ define(function(require) {
                     App.slider.slidePage(new IndicadorView({
                         model: App.models.indicador
                     }).render().$el);
+                }
+            });
+        },
+
+        reporte : function() {
+            App.models.reporte = new Reporte.Model();
+
+            if (typeof App.collections.categories === "undefined")
+                App.collections.categories = new Categoria.Collection();
+            App.collections.categories.fetch({
+                "success": function() {
+                    App.views.reporte = new ReporteView({
+                        collection : App.collections.categories,
+                        model : App.models.reporte
+                    });
+                    App.slider.slidePage(App.views.reporte.render().$el);
                 }
             });
         }
