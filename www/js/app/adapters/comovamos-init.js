@@ -43,7 +43,7 @@ define(function(require) {
 			console.log("loadDimensiones: Consultando datos BOGOTA COMO VAMOS!");
 			bcv.deferred.notify({
 				msg: "Descargando datos: Dimensiones!",
-				count: 0
+				count: 10
 			});
 			var url = "http://api.bogotacomovamos.org/api/dimensions/3?key=comovamos";
 			var xhr = bcv.getJson(url);
@@ -59,7 +59,7 @@ define(function(require) {
 			console.log("loadCategorias: Consultando datos BOGOTA COMO VAMOS!");
 			bcv.deferred.notify({
 				msg: "Descargando datos: Categorias!",
-				count: 0
+				count: 20
 			});
 
 			var items = [];
@@ -95,7 +95,7 @@ define(function(require) {
 			console.log("loadDatos: Consultando datos BOGOTA COMO VAMOS!");
 			bcv.deferred.notify({
 				msg: "Descargando datos: Datos!",
-				count: 0
+				count: 40
 			});
 
 			var items = [];
@@ -143,7 +143,7 @@ define(function(require) {
 			console.log("createDB: Creando base de datos!");
 			bcv.deferred.notify({
 				msg: "Creando base de datos!",
-				count: 0
+				count: 50
 			});
 			var db = window.openDatabase("comovamos", "1.0", "BCV - Bogota BOGOTA COMO VAMOS", 4145728);
 			db.transaction(bcv.populateDB, bcv.errorDB, bcv.successDB);
@@ -153,7 +153,7 @@ define(function(require) {
 			console.log("populateDB: Creando tablas!");
 			bcv.deferred.notify({
 				msg: "Insertando datos!",
-				count: 0
+				count: 60
 			});
 
 			var tables = [{
@@ -209,7 +209,7 @@ define(function(require) {
 			console.log("successDB: Guardando fecha de actualización!");
 			bcv.deferred.notify({
 				msg: "Base de datos creada con éxito!",
-				count: 0
+				count: 80
 			});
 
 			var updated = new Date();

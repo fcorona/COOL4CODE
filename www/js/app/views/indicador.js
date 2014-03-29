@@ -34,9 +34,16 @@ define(function(require) {
 				model: App.models.indicador
 			});
 			this.$el.html(this.template(this.model.toJSON()));
-			setTimeout(function(){
-				$("#indicadorContent").prepend(App.views.chart.render().$el);
-			}, 500);
+			require(['iscroll'], function() {
+				var scroll = new IScroll('#indicadorContent', {
+					scrollY: true,
+					scrollX: false
+				});
+
+				setTimeout(function() {
+					$("#indicadorContent").prepend(App.views.chart.render().$el);					
+				}, 500);
+			});
 			return this;
 		}
 

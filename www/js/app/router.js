@@ -90,9 +90,21 @@ define(function(require) {
             require(['async!https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'], function() {
 
                 if (self.checkConnection() && typeof google !== 'undefined') {
-                    App.views.home = new HomeView();
-                    App.views.home.render();
-                    App.slider.slidePage(App.views.home.$el);
+                    if (typeof App.collections.reporte === "undefined")
+                        App.collections.reporte = new Reporte.Collection();
+                    App.collections.reporte.fetch({
+                        "success": function() {
+                            if (typeof App.views.home === "undefined") {
+                                App.views.home = new HomeView({
+                                    collection: App.collections.reporte
+                                });
+                                App.views.home.render();
+                            } else {
+                                App.views.home.delegateEvents();
+                            }
+                            App.slider.slidePage(App.views.home.$el);
+                        }
+                    });
                 } else {
                     navigator.notification.alert('No hay una conexión a internet!', function() {
                         console.log("Start again!!!");
