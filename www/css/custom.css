@@ -362,4 +362,13 @@ and (orientation : portrait) {
 }
 /*intro css end*/
 
-
+#profile {
+    background-color: #fff;
+    border-radius: 15px;
+}    
+    
+#profile > img {
+    width: 110px;
+    margin: 4% 35%;
+}    
+    
