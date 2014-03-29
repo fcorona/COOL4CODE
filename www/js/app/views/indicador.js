@@ -13,7 +13,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		Backbone = require('backbone'),
 		_ = require('underscore'),
-		tpl = require('text!tpl/generalList.html');
+		tpl = require('text!tpl/generalCharts.html'),
+		ChartView = require('app/views/chart');
 
 	return Backbone.View.extend({
 
@@ -29,9 +30,13 @@ define(function(require) {
 		},
 
 		render: function() {
-			this.$el.html(this.template({
-				'datos': this.collection.toJSON()
-			}));
+			App.views.chart = new ChartView({
+				model: App.models.indicador
+			});
+			this.$el.html(this.template(this.model.toJSON()));
+			setTimeout(function(){
+				$("#indicadorContent").prepend(App.views.chart.render().$el);
+			}, 500);
 			return this;
 		}
 

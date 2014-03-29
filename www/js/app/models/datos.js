@@ -17,8 +17,8 @@ define(function(require) {
 
 		sync: function(method, model, options) {
 			if (method === "read") {
-				BcvDatos.findById(parseInt(this.id, 0)).done(function(data) {
-					options.success(data);
+				BcvDatos.findById(this.id).done(function(data) {					
+					options.success(data[0]);
 				});
 			}
 		}
@@ -40,8 +40,8 @@ define(function(require) {
 	});
 
 	return {
-		Model : Model,
-		Collection : Collection
+		Model: Model,
+		Collection: Collection
 	};
 
 });

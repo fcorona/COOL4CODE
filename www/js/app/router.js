@@ -14,6 +14,7 @@ define(function(require) {
         Backbone = require('backbone');
 
     var HomeView = require('app/views/home'),
+        IndicadorView = require('app/views/indicador'),
         IndicadoresView = require('app/views/indicadores');
 
     var Datos = require('app/models/datos');
@@ -24,7 +25,8 @@ define(function(require) {
         routes: {
             "": "intro",
             "home": "home",
-            "indicadores": "indicadores"
+            "indicadores": "indicadores",
+            "indicador/:id":  "indicador"
         },
 
         initialize: function() {
@@ -96,21 +98,34 @@ define(function(require) {
             });
         },
 
-        indicatores: function() {
+        indicadores: function() {
 
             if (typeof App.collections.datos === "undefined")
                 App.collections.datos = new Datos.Collection();
             App.collections.datos.fetch({
                 "success": function() {
-                    if (typeof App.views.home === "undefined") {
+                    if (typeof App.views.indicadores === "undefined") {
                         App.views.indicadores = new IndicadoresView({
                             collection: App.collections.datos
                         });
-                        App.views.home.render();
+                        App.views.indicadores.render();
                     } else {
-                        App.views.home.delegateEvents();
+                        App.views.indicadores.delegateEvents();
                     }
                     App.slider.slidePage(App.views.indicadores.$el);
+                }
+            });
+        },
+
+        indicador : function(id) {
+            App.models.indicador = new Datos.Model({
+                id: id
+            });
+            App.models.indicador.fetch({
+                "success": function() {
+                    App.slider.slidePage(new IndicadorView({
+                        model: App.models.indicador
+                    }).render().$el);
                 }
             });
         }

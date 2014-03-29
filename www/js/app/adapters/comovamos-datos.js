@@ -11,7 +11,7 @@ define(function(require) {
 	"use strict";
 
 	var $ = require('jquery');
-	var Basebcv  = require('app/utils/db');
+	var Basebcv = require('app/utils/db');
 
 	var db = new Basebcv(window.openDatabase("comovamos", "1.0", "BCV - Bogota BOGOTA COMO VAMOS", 4145728));
 
@@ -23,8 +23,17 @@ define(function(require) {
 		return deferred.promise();
 	};
 
+	var findById = function(id) {
+		var deferred = $.Deferred();
+		db.execute("SELECT * FROM datos WHERE _id = '" + id + "'", function(d) {
+			deferred.resolve(d);
+		});
+		return deferred.promise();
+	};
+
 	return {
-		findAll: findAll
+		findAll: findAll,
+		findById: findById
 	};
 
 });
