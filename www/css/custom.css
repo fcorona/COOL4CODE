@@ -56,3 +56,16 @@
     margin-left: 11px;
     margin-top: 8px;
 }
+
+#generalChart {
+    margin-top: 45px !important;
+}
+
+#peopleChart {
+    margin-top: 45px !important;
+}
+
+#formContainer {
+    padding: 20px;
+    margin-top: 41px;
+}
