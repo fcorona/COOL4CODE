@@ -31,7 +31,7 @@ define(function(require) {
 					latitude: 4.598055600,
 					longitude: -74.075833300
 				}
-			};	
+			};
 			navigator.geolocation.getCurrentPosition(function(gp) {
 				position = gp;
 			}, function(error) {
@@ -60,13 +60,19 @@ define(function(require) {
 				} else {
 					self.model.set(name, value);
 				}
-				
+
 			});
 			this.model.save(null, {
 				success: function(model) {
-					alert('New object created with objectId: ' + model.id);
+					navigator.notification.alert('Gracias por tu reporte!', function() {
+						window.history.back();
+					}, 'Bien', 'Aceptar');
+					alert('Failed to create new object, with error code: ' + error.description);
 				},
 				error: function(model, error) {
+					navigator.notification.alert('El repositorio de datos no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {
+						window.history.back();
+					}, 'Atención', 'Reintentar');
 					alert('Failed to create new object, with error code: ' + error.description);
 				}
 			});
