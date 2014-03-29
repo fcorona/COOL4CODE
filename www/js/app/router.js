@@ -13,12 +13,18 @@ define(function(require) {
     var $ = require('jquery'),
         Backbone = require('backbone');
 
+    var HomeView = require('app/views/home'),
+        IndicadoresView = require('app/views/indicadores');
+
+    var Datos = require('app/models/datos');
+
 
     return Backbone.Router.extend({
 
         routes: {
             "": "intro",
-            "home": "home"
+            "home": "home",
+            "indicadores": "indicadores"
         },
 
         initialize: function() {
@@ -40,7 +46,7 @@ define(function(require) {
         intro: function() {
             if (this.checkConnection()) {
 
-                require(['app/adapters/comovamos-data', 'app/views/intro'], function(Bcv, IntroView) {
+                require(['app/adapters/comovamos-init', 'app/views/intro'], function(Bcv, IntroView) {
 
                     App.views.intro = new IntroView();
                     App.views.intro.render();
@@ -78,16 +84,33 @@ define(function(require) {
             require(['async!https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'], function() {
 
                 if (self.checkConnection() && typeof google !== 'undefined') {
-                    require(['app/views/home'], function(HomeView) {
-                        App.views.home = new HomeView();
-                        App.views.home.render();
-                        App.slider.slidePage(App.views.home.$el);
-                    });
+                    App.views.home = new HomeView();
+                    App.views.home.render();
+                    App.slider.slidePage(App.views.home.$el);
                 } else {
                     navigator.notification.alert('No hay una conexión a internet!', function() {
                         console.log("Start again!!!");
                         Backbone.history.loadUrl("/");
                     }, 'Atención', 'Reintentar');
+                }
+            });
+        },
+
+        indicatores: function() {
+
+            if (typeof App.collections.datos === "undefined")
+                App.collections.datos = new Datos.Collection();
+            App.collections.datos.fetch({
+                "success": function() {
+                    if (typeof App.views.home === "undefined") {
+                        App.views.indicadores = new IndicadoresView({
+                            collection: App.collections.datos
+                        });
+                        App.views.home.render();
+                    } else {
+                        App.views.home.delegateEvents();
+                    }
+                    App.slider.slidePage(App.views.indicadores.$el);
                 }
             });
         }
