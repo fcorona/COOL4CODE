@@ -18,4 +18,14 @@ Licencia
 
 Este proyecto esta basado en licencia 
 GNU - GPL V.3
+ 
+-> licence reference:
+The Foundations of the GPL
+
+Nobody should be restricted by the software they use. There are four freedoms that every user should have:
+
+the freedom to use the software for any purpose,
+the freedom to change the software to suit your needs,
+the freedom to share the software with your friends and neighbors, and
+the freedom to share the changes you make.
 
