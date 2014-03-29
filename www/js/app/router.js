@@ -6,7 +6,7 @@
  * David Alméciga: walmeciga@cool4code.com"
  */
 
- define(function(require) {
+define(function(require) {
 
     "use strict";
 
@@ -22,7 +22,7 @@
         },
 
         initialize: function() {
-            App.slider = new PageSlider($('#content'));
+            App.slider = new PageSlider($('body'));
         },
 
         checkConnection: function() {
@@ -44,6 +44,7 @@
 
                     App.views.intro = new IntroView();
                     App.views.intro.render();
+                    App.slider.slidePage(App.views.intro.$el);
 
                     App.utils.bcv = new Bcv();
                     $.when(App.utils.bcv).then(function(r) {
@@ -71,9 +72,26 @@
         },
 
         home: function() {
-            
+
+            var self = this;
+
+            require(['async!https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'], function() {
+
+                if (self.checkConnection() && typeof google !== 'undefined') {
+                    require(['app/views/home'], function(HomeView) {
+                        App.views.home = new HomeView();
+                        App.views.home.render();
+                        App.slider.slidePage(App.views.home.$el);
+                    });
+                } else {
+                    navigator.notification.alert('No hay una conexión a internet!', function() {
+                        console.log("Start again!!!");
+                        Backbone.history.loadUrl("/");
+                    }, 'Atención', 'Reintentar');
+                }
+            });
         }
-        
+
     });
 
 });

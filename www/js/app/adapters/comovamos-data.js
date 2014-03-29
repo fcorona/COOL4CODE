@@ -192,14 +192,13 @@ define(function(require) {
 						} else {
 							v = v2;
 						}
-						console.log(v);
 						values.push("'" + v + "'");
 					});
 					if (values.length === v.fields.length) {
 						var sql = 'INSERT INTO ' + v.name + ' (' + v.fields.join() + ') VALUES (' + values.join() + ')';
 						tx.executeSql(sql);
 					} else {
-						console.error("El registro " + values.join() + "no coincide el numero de columnas!");
+						console.error("El registro " + values.join() + " no coincide el numero de columnas!");
 					}
 				});
 
